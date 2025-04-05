@@ -35,11 +35,13 @@ app.get('/config', (req, res) => {
     if (req.isAuthenticated()) {
         res.send('Welcome to config!');
     } else {
+        console.log('the user is not authenticated!!')
         res.redirect('/login');
     }
 });
   
-// Start the Express server
-app.listen(5001, () => {
-    console.log('Server started on port 5001');
-});
+if (!isProd) {
+    app.listen(5001, () => {
+        console.log('Server started on port 5001');
+    });
+}
