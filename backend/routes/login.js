@@ -34,12 +34,9 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    const user = users.find(u => u.id === id);
-    if (user) {
-        done(null, user);
-    } else {
-        done(new Error('User not found.'))
-    }
+    User.findById(id)
+         .then(user => done(null, user))
+         .catch(err => done(err));
 });
 
 router.use(
