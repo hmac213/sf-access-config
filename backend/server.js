@@ -12,6 +12,8 @@ const login_route = require('./routes/login');
 const logout_route = require('./routes/logout');
 const attributes_route = require('./routes/attributes');
 
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,10 +22,14 @@ app.use(login_route);
 app.use(logout_route);
 app.use(attributes_route);
 
-app.use(cors({
-    origin: 'http://localhost:3000', // your frontend's origin
-    credentials: true
-}));
+const isProd = process.env.NODE_ENV === 'production';
+
+if (!isProd) {
+    app.use(cors({
+        origin: 'http://localhost:3000', // your frontend's origin
+        credentials: true
+    }));
+}
 
 app.get('/config', (req, res) => {
     if (req.isAuthenticated()) {

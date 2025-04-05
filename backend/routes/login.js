@@ -43,7 +43,10 @@ router.use(
     session({
         secret: 'secret_key', // change later
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
+        cookie: {
+            secure: isProd // only set secure cookies in production
+        }
     })
 );
 
