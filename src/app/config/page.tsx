@@ -11,8 +11,7 @@ interface ConfigSettings {
 export default function Config() {
   const searchParams = useSearchParams();
   const [returnUrl, setReturnUrl] = useState<string>('/landing');
-  const [siteOrigin, setSiteOrigin] = useState<string>('');
-  const [sitePath, setSitePath] = useState<string>('');
+  
   const [configSettings, setConfigSettings] = useState<ConfigSettings>({});
 
   useEffect(() => {
@@ -23,8 +22,7 @@ export default function Config() {
     const urlParam = searchParams.get('returnUrl');
     
     // Store parameters in state
-    if (site) setSiteOrigin(decodeURIComponent(site));
-    if (path) setSitePath(decodeURIComponent(path));
+    
     if (config) {
       const decodedConfig = decodeURIComponent(config);
       
@@ -40,10 +38,10 @@ export default function Config() {
         
         setConfigSettings(normalizedConfig);
         console.log('Normalized config settings:', normalizedConfig);
-      } catch (error) {
-        console.error('Error parsing config JSON:', error);
+      } catch (_error) {
+        console.error('Error parsing config JSON');
         // Try to handle it as URL parameters format
-
+  
       }
     }
     
@@ -261,7 +259,7 @@ export default function Config() {
                   {getFormattedReturnUrl()}
                 </code>
                 <p className="mt-2 text-gray-400">
-                  The enabled settings are passed as a JSON array in the 'config' parameter.
+                  The enabled settings are passed as a JSON array in the &apos;config&apos; parameter.
                 </p>
               </div>
             </div>
