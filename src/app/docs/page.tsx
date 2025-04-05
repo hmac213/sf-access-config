@@ -12,7 +12,7 @@ export default function Docs() {
             <Link href="/" className="inline-block bg-white text-purple-600 font-semibold py-2 px-4 rounded hover:bg-gray-100">Return to Home</Link>
           </div>
           <p className="mt-4 text-xl text-gray-200 text-center">
-            Learn how to install, use, and customize eclectech to enhance your website's accessibility.
+            Learn how to install, use, and customize eclectech to enhance your website&apos;s accessibility.
           </p>
         </div>
       </header>
