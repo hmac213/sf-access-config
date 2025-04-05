@@ -22,6 +22,8 @@ app.use(login_route);
 app.use(logout_route);
 app.use(attributes_route);
 
+console.log('backend server has loaded');
+
 const isProd = process.env.NODE_ENV === 'production';
 
 if (!isProd) {
