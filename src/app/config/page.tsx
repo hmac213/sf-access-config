@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -8,7 +8,7 @@ interface ConfigSettings {
   [key: string]: boolean;
 }
 
-export default function Config() {
+function ConfigContent() {
   const searchParams = useSearchParams();
   const [returnUrl, setReturnUrl] = useState<string>('/landing');
   
@@ -172,115 +172,113 @@ export default function Config() {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="relative min-h-screen flex flex-col overflow-hidden">
-        {/* Blurred Gradient Backgrounds */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-blue-700 to-pink-700 filter blur-2xl opacity-20 -z-10"></div>
-        <div className="absolute inset-0 bg-[#0D0D0D] opacity-90 -z-20"></div>
+    <div className="relative min-h-screen flex flex-col overflow-hidden">
+      {/* Blurred Gradient Backgrounds */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-blue-700 to-pink-700 filter blur-2xl opacity-20 -z-10"></div>
+      <div className="absolute inset-0 bg-[#0D0D0D] opacity-90 -z-20"></div>
 
-        <div className="relative z-10 text-white flex flex-col min-h-screen">
-          {/* Navigation Bar */}
-          <header className="flex items-center justify-between px-8 py-4">
-            <div className="text-2xl font-bold">eqlec.tech</div>
-            <nav className="space-x-4">
-              <Link href="/landing" className="text-sm text-gray-300 hover:text-white transition">
-                Home
-              </Link>
-              <Link href="/docs" className="text-sm text-gray-300 hover:text-white transition">
-                Docs
-              </Link>
-            </nav>
-          </header>
+      <div className="relative z-10 text-white flex flex-col min-h-screen">
+        {/* Navigation Bar */}
+        <header className="flex items-center justify-between px-8 py-4">
+          <div className="text-2xl font-bold">eqlec.tech</div>
+          <nav className="space-x-4">
+            <Link href="/landing" className="text-sm text-gray-300 hover:text-white transition">
+              Home
+            </Link>
+            <Link href="/docs" className="text-sm text-gray-300 hover:text-white transition">
+              Docs
+            </Link>
+          </nav>
+        </header>
 
-          {/* Config Form Section */}
-          <main className="flex flex-col items-center justify-start flex-1 px-4 py-8">
-            <div className="w-full max-w-3xl mx-auto bg-black bg-opacity-50 rounded-2xl border border-gray-800 p-8">
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-6">
-                Accessibility Configuration
-              </h1>
-              <p className="text-gray-300 mb-8">
-                Customize your accessibility settings to enhance user experience.
-              </p>
+        {/* Config Form Section */}
+        <main className="flex flex-col items-center justify-start flex-1 px-4 py-8">
+          <div className="w-full max-w-3xl mx-auto bg-black bg-opacity-50 rounded-2xl border border-gray-800 p-8">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-6">
+              Accessibility Configuration
+            </h1>
+            <p className="text-gray-300 mb-8">
+              Customize your accessibility settings to enhance user experience.
+            </p>
 
-              {/* Config Form */}
-              <div className="space-y-8">
-                {/* Visual Section */}
-                <section>
-                  <h2 className="text-xl font-semibold mb-4 text-white">Visual Settings</h2>
-                  <div className="space-y-4">
-                    <ToggleItem 
-                      label="High Contrast Mode" 
-                      description="Enhance visibility with increased color contrast"
-                      checked={isEnabled('enable-high-contrast')}
-                      id="enable-high-contrast"
-                      onToggle={() => toggleSetting('enable-high-contrast')}
-                    />
-                    <ToggleItem 
-                      label="Larger Text" 
-                      description="Increase default font size for better readability"
-                      checked={isEnabled('enable-large-font')}
-                      id="enable-large-font"
-                      onToggle={() => toggleSetting('enable-large-font')}
-                    />
-                  </div>
-                </section>
-
-                {/* Interaction Section */}
-                <section>
-                  <h2 className="text-xl font-semibold mb-4 text-white">Interaction Settings</h2>
-                  <div className="space-y-4">
-                    <ToggleItem 
-                      label="Screen Reader Optimization" 
-                      description="Improve compatibility with assistive technologies"
-                      checked={isEnabled('enable-screen-reader')}
-                      id="enable-screen-reader"
-                      onToggle={() => toggleSetting('enable-screen-reader')}
-                    />
-                  </div>
-                </section>
-              </div>
-
-              {/* Configuration Debug Section */}
-              <div className="mt-8 p-4 bg-gray-900 rounded-lg border border-gray-800">
-                <h3 className="text-lg font-semibold mb-2">Configuration Parameters</h3>
-                <pre className="text-xs text-gray-400 overflow-auto max-h-40">
-                  {JSON.stringify(configSettings, null, 2)}
-                </pre>
-              </div>
-
-              {/* Return URL Preview */}
-              <div className="mt-4 p-4 bg-gray-900 rounded-lg border border-gray-800">
-                <h3 className="text-lg font-semibold mb-2">Return URL Preview</h3>
-                <div className="text-xs text-gray-400 break-all overflow-auto max-h-40">
-                  <p className="mb-2 text-gray-300">When you click Return, you will be redirected to:</p>
-                  <code className="bg-gray-800 p-2 rounded block overflow-x-auto">
-                    {getFormattedReturnUrl()}
-                  </code>
-                  <p className="mt-2 text-gray-400">
-                    The enabled settings are passed as a JSON array in the &apos;config&apos; parameter.
-                  </p>
+            {/* Config Form */}
+            <div className="space-y-8">
+              {/* Visual Section */}
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-white">Visual Settings</h2>
+                <div className="space-y-4">
+                  <ToggleItem 
+                    label="High Contrast Mode" 
+                    description="Enhance visibility with increased color contrast"
+                    checked={isEnabled('enable-high-contrast')}
+                    id="enable-high-contrast"
+                    onToggle={() => toggleSetting('enable-high-contrast')}
+                  />
+                  <ToggleItem 
+                    label="Larger Text" 
+                    description="Increase default font size for better readability"
+                    checked={isEnabled('enable-large-font')}
+                    id="enable-large-font"
+                    onToggle={() => toggleSetting('enable-large-font')}
+                  />
                 </div>
-              </div>
+              </section>
 
-              {/* Save Button */}
-              <div className="mt-8">
-                <button 
-                  onClick={handleReturn}
-                  className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
-                >
-                  Return
-                </button>
+              {/* Interaction Section */}
+              <section>
+                <h2 className="text-xl font-semibold mb-4 text-white">Interaction Settings</h2>
+                <div className="space-y-4">
+                  <ToggleItem 
+                    label="Screen Reader Optimization" 
+                    description="Improve compatibility with assistive technologies"
+                    checked={isEnabled('enable-screen-reader')}
+                    id="enable-screen-reader"
+                    onToggle={() => toggleSetting('enable-screen-reader')}
+                  />
+                </div>
+              </section>
+            </div>
+
+            {/* Configuration Debug Section */}
+            <div className="mt-8 p-4 bg-gray-900 rounded-lg border border-gray-800">
+              <h3 className="text-lg font-semibold mb-2">Configuration Parameters</h3>
+              <pre className="text-xs text-gray-400 overflow-auto max-h-40">
+                {JSON.stringify(configSettings, null, 2)}
+              </pre>
+            </div>
+
+            {/* Return URL Preview */}
+            <div className="mt-4 p-4 bg-gray-900 rounded-lg border border-gray-800">
+              <h3 className="text-lg font-semibold mb-2">Return URL Preview</h3>
+              <div className="text-xs text-gray-400 break-all overflow-auto max-h-40">
+                <p className="mb-2 text-gray-300">When you click Return, you will be redirected to:</p>
+                <code className="bg-gray-800 p-2 rounded block overflow-x-auto">
+                  {getFormattedReturnUrl()}
+                </code>
+                <p className="mt-2 text-gray-400">
+                  The enabled settings are passed as a JSON array in the &apos;config&apos; parameter.
+                </p>
               </div>
             </div>
-          </main>
 
-          {/* Footer */}
-          <footer className="border-t border-gray-800 py-6 text-center text-gray-500">
-            <p>&copy; {new Date().getFullYear()} eqlec.tech. All rights reserved.</p>
-          </footer>
-        </div>
+            {/* Save Button */}
+            <div className="mt-8">
+              <button 
+                onClick={handleReturn}
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
+              >
+                Return
+              </button>
+            </div>
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-gray-800 py-6 text-center text-gray-500">
+          <p>&copy; {new Date().getFullYear()} eqlec.tech. All rights reserved.</p>
+        </footer>
       </div>
-    </Suspense>
+    </div>
   );
 }
 
@@ -311,5 +309,13 @@ function ToggleItem({ label, description, checked = false, id, onToggle }: Toggl
         <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-500 peer-checked:via-purple-500 peer-checked:to-blue-500"></div>
       </label>
     </div>
+  );
+}
+
+export default function ConfigPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfigContent />
+    </Suspense>
   );
 }
