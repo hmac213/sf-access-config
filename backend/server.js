@@ -1,4 +1,5 @@
 require('./db');
+require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,6 +12,8 @@ const login_route = require('./routes/login');
 const logout_route = require('./routes/logout');
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(register_route);
 app.use(login_route);
 app.use(logout_route);
@@ -19,8 +22,6 @@ app.use(cors({
     origin: 'http://localhost:3000', // your frontend's origin
     credentials: true
 }));
-
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/config', (req, res) => {
     if (req.isAuthenticated()) {
