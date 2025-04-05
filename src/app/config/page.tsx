@@ -78,6 +78,7 @@ export default function Config() {
         const decodedSite = decodeURIComponent(site);
         const decodedPath = path ? decodeURIComponent(path) : '';
         const constructedUrl = decodedSite + (decodedPath.startsWith('/') ? decodedPath : '/' + decodedPath);
+        
         setReturnUrl(constructedUrl);
       } catch (error) {
         console.warn('Could not construct return URL from site and path:', error);
@@ -85,13 +86,49 @@ export default function Config() {
     }
   }, [searchParams]);
 
+  // Format the URL with enabled settings as a JSON array
+  const getFormattedReturnUrl = (): string => {
+    // Get only the enabled settings
+    const enabledSettings: string[] = [];
+    Object.entries(configSettings).forEach(([key, value]) => {
+      if (value === true) {
+        enabledSettings.push(key);
+      }
+    });
+    
+    // Start with the base URL
+    let formattedUrl = returnUrl;
+    
+    // Don't add any parameters if no settings are enabled
+    if (enabledSettings.length === 0) {
+      return formattedUrl;
+    }
+    
+    // Convert the array to a JSON string
+    const settingsArray = JSON.stringify(enabledSettings);
+    
+    // URI encode the JSON array
+    const encodedSettings = encodeURIComponent(settingsArray);
+    
+    // Add the encoded array as a single 'config' parameter
+    const queryConnector = formattedUrl.includes('?') ? '&' : '?';
+    formattedUrl += `${queryConnector}config=${encodedSettings}`;
+    
+    return formattedUrl;
+  };
+
   const handleReturn = () => {
+    // Get the properly formatted return URL with enabled settings
+    const finalReturnUrl = getFormattedReturnUrl();
+    
+    console.log('Returning to URL with settings:', finalReturnUrl);
+    
     // Try to close the tab first
     window.close();
     
     // Redirect to the specified return URL as fallback
     setTimeout(() => {
-      window.location.href = returnUrl;
+      window.location.href = finalReturnUrl;
     }, 300);
   };
 
@@ -182,6 +219,20 @@ export default function Config() {
               <pre className="text-xs text-gray-400 overflow-auto max-h-40">
                 {JSON.stringify(configSettings, null, 2)}
               </pre>
+            </div>
+
+            {/* Return URL Preview */}
+            <div className="mt-4 p-4 bg-gray-900 rounded-lg border border-gray-800">
+              <h3 className="text-lg font-semibold mb-2">Return URL Preview</h3>
+              <div className="text-xs text-gray-400 break-all overflow-auto max-h-40">
+                <p className="mb-2 text-gray-300">When you click Return, you will be redirected to:</p>
+                <code className="bg-gray-800 p-2 rounded block overflow-x-auto">
+                  {getFormattedReturnUrl()}
+                </code>
+                <p className="mt-2 text-gray-400">
+                  The enabled settings are passed as a JSON array in the 'config' parameter.
+                </p>
+              </div>
             </div>
 
             {/* Save Button */}
