@@ -1,5 +1,4 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 const User = require('../models/user');
@@ -13,7 +12,7 @@ router.post('/api/register', async (req, res) => {
     }
     const newUser = new User({ name, email, password, attributes: null });
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully' });
+    res.redirect('/login');
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to create user' });

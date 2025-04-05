@@ -113,37 +113,52 @@ export default function Config() {
     return formattedUrl;
   };
 
-  const handleReturn = () => {
+  const handleReturn = async () => {
+    // Extract enabled settings as an array
+    const enabledSettings: string[] = Object.entries(configSettings)
+      .filter(([key, value]) => value === true)
+      .map(([key]) => key);
+
+    try {
+      // Send a POST request to '/api/attributes' with the enabled settings
+      const response = await fetch('/api/attributes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ attributes: enabledSettings })
+      });
+      if (!response.ok) {
+        console.error('Failed to update attributes');
+      } else {
+        console.log('Attributes updated successfully');
+      }
+    } catch (error) {
+      console.error('Error posting attributes:', error);
+    }
+
     // Get the properly formatted return URL with enabled settings
     const finalReturnUrl = getFormattedReturnUrl();
-    
     console.log('Returning to URL with settings:', finalReturnUrl);
-    
+
     // Try multiple strategies for closing and redirecting
     try {
       // Strategy 1: Try to redirect the opener (parent) window and close this one
       if (window.opener) {
-        // Redirect the parent window to our destination
         window.opener.location.href = finalReturnUrl;
-        // Then close this window
         window.close();
-        return; // If successful, exit the function
+        return;
       }
       
       // Strategy 2: Open the URL in a new window/tab, then try to close this one
       const newWindow = window.open(finalReturnUrl, '_blank');
-      
-      // If the new window was successfully opened, close this one
       if (newWindow) {
         window.close();
-        return; // If successful, exit the function
+        return;
       }
       
       // Strategy 3: Fallback - just redirect this window
       window.location.href = finalReturnUrl;
     } catch (error) {
       console.error('Error during window management:', error);
-      // Final fallback - always make sure we redirect
       window.location.href = finalReturnUrl;
     }
   };

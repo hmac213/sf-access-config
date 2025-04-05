@@ -10,6 +10,7 @@ const app = express();
 const register_route = require('./routes/register');
 const login_route = require('./routes/login');
 const logout_route = require('./routes/logout');
+const attributes_route = require('./routes/attributes');
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(register_route);
 app.use(login_route);
 app.use(logout_route);
+app.use(attributes_route);
 
 app.use(cors({
     origin: 'http://localhost:3000', // your frontend's origin
