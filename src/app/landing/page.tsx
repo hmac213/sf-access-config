@@ -13,18 +13,18 @@ export default function Landing() {
         <header className="flex items-center justify-between px-8 py-4">
           <div className="text-2xl font-bold">eqlec.tech</div>
           <div className="space-x-4">
-            <a
-              href="/signin"
+            <Link
+              href="/login"
               className="text-sm border border-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition"
             >
-              Sign In
-            </a>
-            <a
-              href="/signup"
+              Log In
+            </Link>
+            <Link
+              href="/register"
               className="text-sm bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 px-4 py-2 rounded-full font-semibold hover:opacity-90 transition"
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </header>
 
