@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/login-form"
+import { RegisterForm } from "@/components/register-form";
 
 export default function Page() {
   return (
@@ -9,7 +9,7 @@ export default function Page() {
 
       <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 relative z-10">
         <div className="w-full max-w-sm">
-          <LoginForm />
+          <RegisterForm />
         </div>
       </div>
     </div>
