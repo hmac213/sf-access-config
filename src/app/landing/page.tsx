@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function Landing() {
   return (
@@ -33,15 +34,15 @@ export default function Landing() {
             Accessibility Toolkit
           </h1>
           <p className="text-lg md:text-2xl max-w-3xl mx-auto text-gray-300 mb-8">
-            Built to help you create an inclusive website, eqlec is the best way to ensure your site is accessible with AI. From automated alt-text suggestions to semantic markup enhancements, eqlec streamlines your development process while making your website more inclusive.
+            One line of code for the world.
           </p>
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <a
+            <Link
               href="/docs"
               className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
             >
               For Devs
-            </a>
+            </Link>
             <a
               href="/signup"
               className="border border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
