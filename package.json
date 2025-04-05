@@ -18,6 +18,8 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "lucide-react": "^0.487.0",
+    "mongodb": "^6.15.0",
+    "mongoose": "^8.13.2",
     "next": "15.2.4",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
