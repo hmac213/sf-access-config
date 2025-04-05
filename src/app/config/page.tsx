@@ -38,7 +38,7 @@ export default function Config() {
         
         setConfigSettings(normalizedConfig);
         console.log('Normalized config settings:', normalizedConfig);
-      } catch (_error) {
+      } catch {
         console.error('Error parsing config JSON');
         // Try to handle it as URL parameters format
   
@@ -51,7 +51,7 @@ export default function Config() {
         if (urlParam.startsWith('/') || new URL(urlParam).protocol.match(/^https?:$/)) {
           setReturnUrl(urlParam);
         }
-      } catch (error) {
+      } catch {
         console.warn('Invalid return URL provided:', urlParam);
       }
     } else if (site) {
@@ -84,12 +84,9 @@ export default function Config() {
   // Format the URL with enabled settings as a JSON array
   const getFormattedReturnUrl = (): string => {
     // Get only the enabled settings
-    const enabledSettings: string[] = [];
-    Object.entries(configSettings).forEach(([key, value]) => {
-      if (value === true) {
-        enabledSettings.push(key);
-      }
-    });
+    const enabledSettings = Object.entries(configSettings)
+      .filter(([, value]) => value === true)
+      .map(([key]) => key);
     
     // Start with the base URL
     let formattedUrl = returnUrl;
