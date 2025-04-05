@@ -111,7 +111,7 @@ export default function Config() {
   const handleReturn = async () => {
     // Extract enabled settings as an array
     const enabledSettings: string[] = Object.entries(configSettings)
-      .filter(([key, value]) => value === true)
+      .filter(([, value]) => value === true)
       .map(([key]) => key);
 
     try {
