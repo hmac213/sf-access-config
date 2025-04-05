@@ -34,10 +34,8 @@ export default function Config() {
         
         // Convert all config values to boolean
         const normalizedConfig: ConfigSettings = {};
-        Object.keys(parsedConfig).forEach(key => {
-          // Consider any defined value (including empty string) as true
-          // This handles {"enable-large-font":"","enable-high-contrast":""} format
-          normalizedConfig[key] = parsedConfig[key] !== false && parsedConfig[key] !== "false";
+        parsedConfig.forEach((value: string) => {
+          normalizedConfig[value] = true;
         });
         
         setConfigSettings(normalizedConfig);
@@ -45,21 +43,7 @@ export default function Config() {
       } catch (error) {
         console.error('Error parsing config JSON:', error);
         // Try to handle it as URL parameters format
-        try {
-          const configObj: ConfigSettings = {};
-          decodedConfig.split('&').forEach(param => {
-            const [key, value] = param.split('=');
-            if (key) {
-              // Convert value to boolean - "false" and "0" become false, everything else is true
-              configObj[key] = !(value === "false" || value === "0");
-            }
-          });
-          setConfigSettings(configObj);
-          console.log('Parsed config as URL parameters:', configObj);
-        } catch (e) {
-          console.error('Failed to parse config in any format:', e);
-          setConfigSettings({});
-        }
+
       }
     }
     
@@ -76,9 +60,22 @@ export default function Config() {
       // If no returnUrl is provided but site is, construct a return URL from site and path
       try {
         const decodedSite = decodeURIComponent(site);
-        const decodedPath = path ? decodeURIComponent(path) : '';
-        const constructedUrl = decodedSite + (decodedPath.startsWith('/') ? decodedPath : '/' + decodedPath);
+        let decodedPath = '';
         
+        // Make sure we only get the path part without any query parameters
+        if (path) {
+          // Extract just the path portion without query parameters
+          const pathOnly = decodeURIComponent(path).split('?')[0];
+          decodedPath = pathOnly;
+        }
+        
+        console.log('Site:', site);
+        console.log('Path:', path);
+        console.log('Decoded site:', decodedSite);
+        console.log('Decoded path (without query params):', decodedPath);
+        
+        const constructedUrl = decodedSite + (decodedPath.startsWith('/') ? decodedPath : '/' + decodedPath);
+        console.log('Constructed return URL:', constructedUrl);
         setReturnUrl(constructedUrl);
       } catch (error) {
         console.warn('Could not construct return URL from site and path:', error);
@@ -110,9 +107,8 @@ export default function Config() {
     // URI encode the JSON array
     const encodedSettings = encodeURIComponent(settingsArray);
     
-    // Add the encoded array as a single 'config' parameter
-    const queryConnector = formattedUrl.includes('?') ? '&' : '?';
-    formattedUrl += `${queryConnector}config=${encodedSettings}`;
+    // Add the encoded array as a 'config' parameter
+    formattedUrl += `?config=${encodedSettings}`;
     
     return formattedUrl;
   };
@@ -123,13 +119,33 @@ export default function Config() {
     
     console.log('Returning to URL with settings:', finalReturnUrl);
     
-    // Try to close the tab first
-    window.close();
-    
-    // Redirect to the specified return URL as fallback
-    setTimeout(() => {
+    // Try multiple strategies for closing and redirecting
+    try {
+      // Strategy 1: Try to redirect the opener (parent) window and close this one
+      if (window.opener) {
+        // Redirect the parent window to our destination
+        window.opener.location.href = finalReturnUrl;
+        // Then close this window
+        window.close();
+        return; // If successful, exit the function
+      }
+      
+      // Strategy 2: Open the URL in a new window/tab, then try to close this one
+      const newWindow = window.open(finalReturnUrl, '_blank');
+      
+      // If the new window was successfully opened, close this one
+      if (newWindow) {
+        window.close();
+        return; // If successful, exit the function
+      }
+      
+      // Strategy 3: Fallback - just redirect this window
       window.location.href = finalReturnUrl;
-    }, 300);
+    } catch (error) {
+      console.error('Error during window management:', error);
+      // Final fallback - always make sure we redirect
+      window.location.href = finalReturnUrl;
+    }
   };
 
   // Check if a specific config setting is enabled
