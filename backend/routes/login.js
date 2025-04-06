@@ -35,8 +35,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
     User.findById(id)
-         .then(user => done(null, user))
-         .catch(err => done(err));
+        .then(user => done(null, user))
+        .catch(err => done(err));
 });
 
 router.use(
@@ -45,7 +45,7 @@ router.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: isProd // only set secure cookies in production
+            secure: true // only set secure cookies in production
         }
     })
 );
