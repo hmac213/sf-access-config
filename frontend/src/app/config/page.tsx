@@ -11,42 +11,55 @@ interface ConfigSettings {
 function ConfigContent() {
   const searchParams = useSearchParams();
   const [returnUrl, setReturnUrl] = useState<string>('/landing');
-  
   const [configSettings, setConfigSettings] = useState<ConfigSettings>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch('/api/auth/status', { credentials: 'include' })
+      .then(async res => {
+        if (!res.ok) {
+          if (res.status === 401) {
+             setError('User not authenticated. Please log in.');
+          } else {
+            throw new Error(`Failed to fetch auth status: ${res.statusText}`);
+          }
+          return null;
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.authenticated && data.user && Array.isArray(data.user.attributes)) {
+          const initialSettings: ConfigSettings = {};
+          data.user.attributes.forEach((attr: string) => {
+            initialSettings[attr] = true;
+          });
+          setConfigSettings(initialSettings);
+          console.log('Initialized config settings from fetched attributes:', initialSettings);
+        } else if (data === null) {
+        } else {
+          console.warn('Could not initialize settings from fetched data:', data);
+          setConfigSettings({}); 
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching initial attributes:', err);
+        setError(err.message || 'Failed to load settings.');
+        setConfigSettings({});
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (!searchParams) return;
-    // Extract all parameters from the URL
+    
     const site = searchParams.get('site');
     const path = searchParams.get('path');
-    const config = searchParams.get('config');
     const urlParam = searchParams.get('returnUrl');
     
-    // Store parameters in state
-    
-    if (config) {
-      const decodedConfig = decodeURIComponent(config);
-      
-      // Safely parse the config JSON
-      try {
-        const parsedConfig = JSON.parse(decodedConfig);
-        
-        // Convert all config values to boolean
-        const normalizedConfig: ConfigSettings = {};
-        parsedConfig.forEach((value: string) => {
-          normalizedConfig[value] = true;
-        });
-        
-        setConfigSettings(normalizedConfig);
-        console.log('Normalized config settings:', normalizedConfig);
-      } catch {
-        console.error('Error parsing config JSON');
-        // Try to handle it as URL parameters format
-  
-      }
-    }
-    
-    // Handle return URL
     if (urlParam) {
       try {
         if (urlParam.startsWith('/') || new URL(urlParam).protocol.match(/^https?:$/)) {
@@ -56,14 +69,11 @@ function ConfigContent() {
         console.warn('Invalid return URL provided:', urlParam);
       }
     } else if (site) {
-      // If no returnUrl is provided but site is, construct a return URL from site and path
       try {
         const decodedSite = decodeURIComponent(site);
         let decodedPath = '';
         
-        // Make sure we only get the path part without any query parameters
         if (path) {
-          // Extract just the path portion without query parameters
           const pathOnly = decodeURIComponent(path).split('?')[0];
           decodedPath = pathOnly;
         }
@@ -82,76 +92,62 @@ function ConfigContent() {
     }
   }, [searchParams]);
 
-  // Format the URL with enabled settings as a JSON array
   const getFormattedReturnUrl = (): string => {
-    // Get only the enabled settings
     const enabledSettings = Object.entries(configSettings)
       .filter(([, value]) => value === true)
       .map(([key]) => key);
     
-    // Start with the base URL
     let formattedUrl = returnUrl;
     
-    // Don't add any parameters if no settings are enabled
     if (enabledSettings.length === 0) {
       return formattedUrl;
     }
     
-    // Convert the array to a JSON string
     const settingsArray = JSON.stringify(enabledSettings);
     
-    // URI encode the JSON array
     const encodedSettings = encodeURIComponent(settingsArray);
     
-    // Add the encoded array as a 'config' parameter
     formattedUrl += `?config=${encodedSettings}`;
     
     return formattedUrl;
   };
 
   const handleReturn = async () => {
-    // Extract enabled settings as an array
-    const enabledSettings: string[] = Object.entries(configSettings)
-      .filter(([, value]) => value === true)
-      .map(([key]) => key);
+    console.log('Sending config settings to backend:', configSettings);
 
     try {
-      // Send a POST request to '/api/attributes' with the enabled settings
       const response = await fetch('/api/attributes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ attributes: enabledSettings })
+        body: JSON.stringify(configSettings)
       });
       if (!response.ok) {
-        console.error('Failed to update attributes');
+        const errorData = await response.json().catch(() => ({}));
+        console.error(`Failed to update attributes: ${response.status}`, errorData.error || '');
       } else {
-        console.log('Attributes updated successfully');
+        const successData = await response.json();
+        console.log('Attributes updated successfully:', successData.attributes);
       }
     } catch (error) {
       console.error('Error posting attributes:', error);
     }
 
-    // Get the properly formatted return URL with enabled settings
     const finalReturnUrl = getFormattedReturnUrl();
     console.log('Returning to URL with settings:', finalReturnUrl);
 
-    // Try multiple strategies for closing and redirecting
     try {
-      // Strategy 1: Try to redirect the opener (parent) window and close this one
       if (window.opener) {
         window.opener.location.href = finalReturnUrl;
         window.close();
         return;
       }
       
-      // Strategy 2: Open the URL in a new window/tab, then try to close this one
       const newWindow = window.open(finalReturnUrl, '_blank');
       if (newWindow) {
         window.close();
         return;
       }
       
-      // Strategy 3: Fallback - just redirect this window
       window.location.href = finalReturnUrl;
     } catch (error) {
       console.error('Error during window management:', error);
@@ -159,12 +155,10 @@ function ConfigContent() {
     }
   };
 
-  // Check if a specific config setting is enabled
   const isEnabled = (key: string): boolean => {
     return !!configSettings[key];
   };
 
-  // Toggle a config setting
   const toggleSetting = (key: string) => {
     setConfigSettings(prev => ({
       ...prev,
@@ -172,14 +166,20 @@ function ConfigContent() {
     }));
   };
 
+  if (isLoading) {
+    return <div className="text-white text-center p-10">Loading settings...</div>;
+  }
+
+  if (error) {
+    return <div className="text-white text-center p-10 text-red-500">Error: {error}</div>;
+  }
+
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
-      {/* Blurred Gradient Backgrounds */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-blue-700 to-pink-700 filter blur-2xl opacity-20 -z-10"></div>
       <div className="absolute inset-0 bg-[#0D0D0D] opacity-90 -z-20"></div>
 
       <div className="relative z-10 text-white flex flex-col min-h-screen">
-        {/* Navigation Bar */}
         <header className="flex items-center justify-between px-8 py-4">
           <div className="text-2xl font-bold">eqlec.tech</div>
           <nav className="space-x-4">
@@ -192,7 +192,6 @@ function ConfigContent() {
           </nav>
         </header>
 
-        {/* Config Form Section */}
         <main className="flex flex-col items-center justify-start flex-1 px-4 py-8">
           <div className="w-full max-w-3xl mx-auto bg-black bg-opacity-50 rounded-2xl border border-gray-800 p-8">
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-6">
@@ -202,9 +201,7 @@ function ConfigContent() {
               Customize your accessibility settings to enhance user experience.
             </p>
 
-            {/* Config Form */}
             <div className="space-y-8">
-              {/* Visual Section */}
               <section>
                 <h2 className="text-xl font-semibold mb-4 text-white">Visual Settings</h2>
                 <div className="space-y-4">
@@ -232,7 +229,6 @@ function ConfigContent() {
                 </div>
               </section>
 
-              {/* Interaction Section */}
               <section>
                 <h2 className="text-xl font-semibold mb-4 text-white">Interaction Settings</h2>
                 <div className="space-y-4">
@@ -254,7 +250,6 @@ function ConfigContent() {
               </section>
             </div>
 
-            {/* Save Button */}
             <div className="mt-8">
               <button 
                 onClick={handleReturn}
@@ -266,7 +261,6 @@ function ConfigContent() {
           </div>
         </main>
 
-        {/* Footer */}
         <footer className="border-t border-gray-800 py-6 text-center text-gray-500">
           <p>&copy; {new Date().getFullYear()} eqlec.tech. All rights reserved.</p>
         </footer>
@@ -275,7 +269,6 @@ function ConfigContent() {
   );
 }
 
-// Toggle Component
 interface ToggleItemProps {
   label: string;
   description: string;
