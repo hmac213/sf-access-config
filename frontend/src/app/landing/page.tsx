@@ -62,7 +62,7 @@ export default function Landing() {
               For Devs
             </Link>
             <a
-              href="/signup"
+              href="/register"
               className="border border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
             >
               Get Started
