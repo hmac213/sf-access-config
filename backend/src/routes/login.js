@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const router = express.Router();
@@ -36,18 +35,6 @@ passport.deserializeUser((id, done) => {
         .then(user => done(null, user))
         .catch(err => done(err));
 });
-
-router.use(
-    session({
-        secret: 'secret_key', // change later
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            secure: process.env.NODE_ENV === 'production' ? true : false, // only set secure cookies in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-        }
-    })
-);
 
 router.use(passport.initialize());
 router.use(passport.session());
