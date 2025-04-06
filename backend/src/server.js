@@ -22,9 +22,6 @@ app.use(login_route);
 app.use(logout_route);
 app.use(attributes_route);
 
-const isProd = process.env.NODE_ENV === 'production';
-
-
 app.use(cors({
     origin: `${process.env.FRONTEND_BASE_URL}`, // your frontend's origin
     credentials: true

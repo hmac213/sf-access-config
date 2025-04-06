@@ -8,8 +8,6 @@ const router = express.Router();
 
 const User = require('../models/user');
 
-const isProd = process.env.NODE_ENV === 'production';
-
 passport.use(
     new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
         try {
@@ -45,7 +43,7 @@ router.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: true // only set secure cookies in production
+            secure: false // only set secure cookies in production
         }
     })
 );
