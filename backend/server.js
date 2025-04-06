@@ -11,6 +11,7 @@ const register_route = require('./src/routes/register');
 const login_route = require('./src/routes/login');
 const logout_route = require('./src/routes/logout');
 const attributes_route = require('./src/routes/attributes');
+const auth_route = require('./src/routes/auth');
 
 app.set('trust proxy', 1);
 
@@ -21,6 +22,7 @@ app.use(register_route);
 app.use(login_route);
 app.use(logout_route);
 app.use(attributes_route);
+app.use(auth_route);
 
 app.use(cors({
     origin: `${process.env.FRONTEND_BASE_URL}`, // your frontend's origin

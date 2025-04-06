@@ -221,6 +221,13 @@ function ConfigContent() {
                     id="enable-large-font"
                     onToggle={() => toggleSetting('enable-large-font')}
                   />
+                  <ToggleItem 
+                    label="Sparser Text" 
+                    description="Increase the space between text for better readability"
+                    checked={isEnabled('enable-sparse-text')}
+                    id="enable-sparse-text"
+                    onToggle={() => toggleSetting('enable-sparse-text')}
+                  />
                 </div>
               </section>
 
@@ -235,37 +242,22 @@ function ConfigContent() {
                     id="enable-screen-reader"
                     onToggle={() => toggleSetting('enable-screen-reader')}
                   />
+                  <ToggleItem 
+                    label="Audio Subtitles" 
+                    description="Generates subtitles for any audio transmitted through the site"
+                    checked={isEnabled('enable-live-subtitles')}
+                    id="enable-live-subtitles"
+                    onToggle={() => toggleSetting('enable-live-subtitles')}
+                  />
                 </div>
               </section>
-            </div>
-
-            {/* Configuration Debug Section */}
-            <div className="mt-8 p-4 bg-gray-900 rounded-lg border border-gray-800">
-              <h3 className="text-lg font-semibold mb-2">Configuration Parameters</h3>
-              <pre className="text-xs text-gray-400 overflow-auto max-h-40">
-                {JSON.stringify(configSettings, null, 2)}
-              </pre>
-            </div>
-
-            {/* Return URL Preview */}
-            <div className="mt-4 p-4 bg-gray-900 rounded-lg border border-gray-800">
-              <h3 className="text-lg font-semibold mb-2">Return URL Preview</h3>
-              <div className="text-xs text-gray-400 break-all overflow-auto max-h-40">
-                <p className="mb-2 text-gray-300">When you click Return, you will be redirected to:</p>
-                <code className="bg-gray-800 p-2 rounded block overflow-x-auto">
-                  {getFormattedReturnUrl()}
-                </code>
-                <p className="mt-2 text-gray-400">
-                  The enabled settings are passed as a JSON array in the &apos;config&apos; parameter.
-                </p>
-              </div>
             </div>
 
             {/* Save Button */}
             <div className="mt-8">
               <button 
                 onClick={handleReturn}
-                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition cursor-pointer"
               >
                 Return
               </button>
