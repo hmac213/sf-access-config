@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
+const passport = require('passport');
 
 const app = express();
 
@@ -30,6 +31,9 @@ app.use(
         }
     })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const register_route = require('./src/routes/register');
 const login_route = require('./src/routes/login');

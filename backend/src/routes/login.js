@@ -36,9 +36,6 @@ passport.deserializeUser((id, done) => {
         .catch(err => done(err));
 });
 
-router.use(passport.initialize());
-router.use(passport.session());
-
 router.post('/api/login', passport.authenticate('local', {
     failureRedirect: `${process.env.FRONTEND_BASE_URL}/landing`,
     successRedirect: `${process.env.FRONTEND_BASE_URL}/config`
