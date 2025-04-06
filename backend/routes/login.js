@@ -54,8 +54,8 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 router.post('/api/login', passport.authenticate('local', {
-    failureRedirect: isProd ? '/landing' : `${process.env.FRONTEND_BASE_URL}/landing`,
-    successRedirect: isProd ? '/config' : `${process.env.FRONTEND_BASE_URL}/config`
+    failureRedirect: `${process.env.FRONTEND_BASE_URL}/landing`,
+    successRedirect: `${process.env.FRONTEND_BASE_URL}/config`
 }));
 
 module.exports = router;

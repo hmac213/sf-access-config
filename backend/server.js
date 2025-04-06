@@ -22,16 +22,13 @@ app.use(login_route);
 app.use(logout_route);
 app.use(attributes_route);
 
-console.log('backend server has loaded');
-
 const isProd = process.env.NODE_ENV === 'production';
 
-if (!isProd) {
-    app.use(cors({
-        origin: 'http://localhost:3000', // your frontend's origin
-        credentials: true
-    }));
-}
+
+app.use(cors({
+    origin: `${process.env.FRONTEND_BASE_URL}`, // your frontend's origin
+    credentials: true
+}));
 
 app.get('/config', (req, res) => {
     if (req.isAuthenticated()) {
@@ -42,8 +39,6 @@ app.get('/config', (req, res) => {
     }
 });
   
-if (!isProd) {
-    app.listen(5001, () => {
-        console.log('Server started on port 5001');
-    });
-}
+app.listen(5001, () => {
+    console.log('Server started on port 5001');
+});
