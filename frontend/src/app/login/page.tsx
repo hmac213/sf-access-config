@@ -1,8 +1,14 @@
 'use client'; // Make this a client component
 
+import { Suspense } from 'react'; // Import Suspense
 import { LoginForm } from "@/components/login-form"
 
 export default function Page() {
+  // Consider a more sophisticated loading skeleton if desired
+  const loadingFallback = (
+    <div className="text-white text-center p-10">Loading...</div>
+  );
+
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Blurred Gradient Backgrounds */}
@@ -11,7 +17,9 @@ export default function Page() {
 
       <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 relative z-10">
         <div className="w-full max-w-sm">
-          <LoginForm />
+          <Suspense fallback={loadingFallback}>
+            <LoginForm />
+          </Suspense>
         </div>
       </div>
     </div>
