@@ -7,6 +7,24 @@ export default function Landing() {
       {/* Blurred Gradient Backgrounds */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-blue-700 to-pink-700 filter blur-2xl opacity-20 -z-10"></div>
       <div className="absolute inset-0 bg-[#0D0D0D] opacity-90 -z-20"></div>
+      
+      <div className="absolute inset-0 flex items-center justify-center -z-5 opacity-50">
+        {/* Decorative circular blurs */}
+        <div className="absolute w-96 h-96 bg-pink-400 rounded-full blur-3xl opacity-35 top-[10%] left-[10%]"></div>
+        <div className="absolute w-[28rem] h-[28rem] bg-purple-500 rounded-full blur-[140px] opacity-35 bottom-[10%] right-[10%]"></div>
+        <div className="absolute w-[22rem] h-[22rem] bg-blue-500 rounded-full blur-[120px] opacity-30 top-[50%] right-[30%]"></div>
+        
+        {/* Hero image */}
+        <div className="flex items-center justify-center w-[80%] h-[70%]">
+          <div className="p-[3px] rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 w-full h-full">
+            <img
+              src="/hero.png"
+              alt="Hero Visual"
+              className="object-cover w-full h-full rounded-xl shadow-lg opacity-70"
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="relative z-10 text-white flex flex-col min-h-screen">
         {/* Navigation Bar */}
