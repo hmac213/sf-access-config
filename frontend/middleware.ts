@@ -40,7 +40,9 @@ export async function middleware(req: NextRequest) {
       // If user is not logged in and tries to access a protected path, redirect to login
       if (PROTECTED_PATHS.includes(pathname)) {
         console.log(`Middleware: Unauthenticated user accessing protected path ${pathname}, redirecting to /login.`);
-        return NextResponse.redirect(new URL('/login', req.url)); 
+        // Preserve the original URL (pathname + search params) as redirect_uri
+        const originalUrl = encodeURIComponent(req.nextUrl.pathname + req.nextUrl.search);
+        return NextResponse.redirect(new URL(`/login?redirect_uri=${originalUrl}`, req.url)); 
       }
       // For any other path (including public ones), let them proceed
       console.log(`Middleware: Unauthenticated user accessing ${pathname}, proceeding.`);

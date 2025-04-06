@@ -36,9 +36,41 @@ passport.deserializeUser((id, done) => {
         .catch(err => done(err));
 });
 
-router.post('/api/login', passport.authenticate('local', {
-    failureRedirect: `${process.env.FRONTEND_BASE_URL}/landing`,
-    successRedirect: `${process.env.FRONTEND_BASE_URL}/config`
-}));
+// Custom callback for login to handle redirect_uri
+router.post('/api/login', (req, res, next) => {
+  // Extract redirect_uri from request body (assuming it's sent there by the form)
+  // Decode it once, as it was encoded by the middleware
+  const redirectUri = req.body.redirect_uri ? decodeURIComponent(req.body.redirect_uri) : null;
+
+  // Basic validation: ensure it's a relative path starting with '/' or handle allowed absolute URLs if necessary
+  const isValidRedirect = redirectUri && redirectUri.startsWith('/'); 
+  // TODO: Add more robust validation if needed (e.g., check against allowed paths/domains)
+  
+  const successRedirectUrl = isValidRedirect 
+    ? `${process.env.FRONTEND_BASE_URL}${redirectUri}` 
+    : `${process.env.FRONTEND_BASE_URL}/config`; // Default fallback
+
+  const failureRedirectUrl = `${process.env.FRONTEND_BASE_URL}/login?error=invalid_credentials`; // Or redirect back to landing? Add error query param.
+
+  // Call passport.authenticate with a custom callback
+  passport.authenticate('local', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) { 
+      console.log('Login failed:', info ? info.message : 'No user');
+      // Include redirect_uri in failure redirect too, so login form can repopulate it
+      const failureParams = new URLSearchParams();
+      failureParams.set('error', info?.message || 'Invalid credentials');
+      if (req.body.redirect_uri) { // Use original encoded value here
+        failureParams.set('redirect_uri', req.body.redirect_uri);
+      }
+      return res.redirect(`${process.env.FRONTEND_BASE_URL}/login?${failureParams.toString()}`);
+    }
+    req.logIn(user, (err) => {
+      if (err) { return next(err); }
+      console.log('Login successful, redirecting to:', successRedirectUrl);
+      return res.redirect(successRedirectUrl);
+    });
+  })(req, res, next); 
+});
 
 module.exports = router;

@@ -1,3 +1,8 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,6 +20,25 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const searchParams = useSearchParams();
+  const [redirectUri, setRedirectUri] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!searchParams) {
+      return;
+    }
+
+    const uri = searchParams.get('redirect_uri');
+    const error = searchParams.get('error');
+    if (uri) {
+      setRedirectUri(uri);
+    }
+    if (error) {
+      setLoginError(decodeURIComponent(error));
+    }
+  }, [searchParams]);
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="bg-[#0D0D0D] text-white">
@@ -27,7 +51,15 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {loginError && (
+            <div className="mb-4 text-center text-sm text-red-500">
+              Login failed: {loginError}
+            </div>
+          )}
           <form action={'/api/login'} method="POST">
+            {redirectUri && (
+              <input type="hidden" name="redirect_uri" value={redirectUri} />
+            )}
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
