@@ -15,6 +15,7 @@ function ConfigContent() {
   const [configSettings, setConfigSettings] = useState<ConfigSettings>({});
 
   useEffect(() => {
+    if (!searchParams) return;
     // Extract all parameters from the URL
     const site = searchParams.get('site');
     const path = searchParams.get('path');
