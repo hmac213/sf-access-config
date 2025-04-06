@@ -35,7 +35,7 @@ export default function Docs() {
         <section className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-3xl font-semibold mb-4 border-b pb-2">2. Environment Configuration (Optional)</h2>
           <p className="mb-4">
-            If you plan to use generative AI features (like potential future audio transcriptions requiring external services), create a <code>.env.local</code> file at the root of your project and add your Gemini API key (or other relevant keys):
+            Create a <code>.env.local</code> file at the root of your project and add your Gemini API key (and other relevant sensitive information):
           </p>
           <pre className="bg-gray-100 p-4 rounded font-mono text-sm overflow-x-auto">
             GEMINI_API_KEY=your_gemini_api_key_here
