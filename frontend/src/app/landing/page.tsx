@@ -29,7 +29,7 @@ export default function Landing() {
       <div className="relative z-10 text-white flex flex-col min-h-screen">
         {/* Navigation Bar */}
         <header className="flex items-center justify-between px-8 py-4">
-          <div className="text-2xl font-bold">eqlec.tech</div>
+          <div className="text-2xl font-bold">&lt;eqlec-tech /&gt;</div>
           <div className="space-x-4">
             <Link
               href="/login"
