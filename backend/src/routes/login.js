@@ -43,7 +43,8 @@ router.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: process.env.NODE_ENV === 'production' ? true : false // only set secure cookies in production
+            secure: process.env.NODE_ENV === 'production' ? true : false, // only set secure cookies in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         }
     })
 );
