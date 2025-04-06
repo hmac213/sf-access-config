@@ -43,7 +43,7 @@ router.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: false // only set secure cookies in production
+            secure: process.env.NODE_ENV === 'production' ? true : false // only set secure cookies in production
         }
     })
 );
