@@ -12,7 +12,7 @@ export default function Docs() {
             <Link href="/" className="inline-block bg-white text-purple-600 font-semibold py-2 px-4 rounded hover:bg-gray-100">Return to Home</Link>
           </div>
           <p className="mt-4 text-xl text-gray-200 text-center">
-            Comprehensive guide to install, configure, and integrate eqlec.tech to enhance your website's accessibility.
+            Comprehensive guide to install, configure, and integrate eqlec.tech to enhance your website&apos;s accessibility.
           </p>
         </div>
       </header>
@@ -85,7 +85,7 @@ export default function RootLayout({
 }`}
           </pre>
           <p className="mt-2 text-gray-700">
-            Place the <code>&lt;eqlec-tech /&gt;</code> tag typically just before the closing <code>&lt;/body&gt;</code> tag. While <code>useState</code> isn't strictly required just to render the tag, you might import and use it later if you need to interact with the component dynamically.
+            Place the <code>&lt;eqlec-tech /&gt;</code> tag typically just before the closing <code>&lt;/body&gt;</code> tag. While <code>useState</code> isn&apos;t strictly required just to render the tag, you might import and use it later if you need to interact with the component dynamically.
           </p>
         </section>
         
@@ -104,7 +104,7 @@ export default function RootLayout({
         <section className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-3xl font-semibold mb-4 border-b pb-2">4. TypeScript Configuration</h2>
           <p className="mb-4">
-            To make TypeScript recognize the <code>&lt;eqlec-tech /&gt;</code> custom element in your JSX, create a type declaration file (e.g., <code>eqlectech-accessibility.d.ts</code> or <code>global.d.ts</code>) in your project's source directory:
+            To make TypeScript recognize the <code>&lt;eqlec-tech /&gt;</code> custom element in your JSX, create a type declaration file (e.g., <code>eqlectech-accessibility.d.ts</code> or <code>global.d.ts</code>) in your project&apos;s source directory:
           </p>
           <pre className="bg-gray-100 p-4 rounded font-mono text-sm overflow-x-auto">
 {`// eqlectech-accessibility.d.ts
@@ -145,7 +145,7 @@ declare namespace JSX {
             {/* Add other attributes if they exist */}
           </ul>
            <p className="mt-4 text-gray-700">
-             Your application's CSS or JavaScript can target these attributes to modify the presentation or behavior accordingly (e.g., <code>body[enable-high-contrast] { /* high contrast styles */ }</code>).
+             Your application&apos;s CSS or JavaScript can target these attributes to modify the presentation or behavior accordingly (e.g., <code>body[enable-high-contrast] { /* high contrast styles */ }</code>).
            </p>
         </section>
 
