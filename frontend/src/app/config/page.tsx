@@ -181,7 +181,7 @@ function ConfigContent() {
 
       <div className="relative z-10 text-white flex flex-col min-h-screen">
         <header className="flex items-center justify-between px-8 py-4">
-          <div className="text-2xl font-bold">eqlec.tech</div>
+          <div className="text-2xl font-bold">&lt;eqlec-tech /&gt;</div>
           <nav className="space-x-4">
             <Link href="/landing" className="text-sm text-gray-300 hover:text-white transition">
               Home
