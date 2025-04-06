@@ -1,4 +1,4 @@
-require('./db');
+require('./src/db');
 require('dotenv').config();
 
 const express = require('express');
@@ -7,10 +7,10 @@ const cors = require('cors');
 
 const app = express();
 
-const register_route = require('./routes/register');
-const login_route = require('./routes/login');
-const logout_route = require('./routes/logout');
-const attributes_route = require('./routes/attributes');
+const register_route = require('./src/routes/register');
+const login_route = require('./src/routes/login');
+const logout_route = require('./src/routes/logout');
+const attributes_route = require('./src/routes/attributes');
 
 app.set('trust proxy', 1);
 
