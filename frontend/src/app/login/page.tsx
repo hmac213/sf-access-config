@@ -1,3 +1,5 @@
+'use client'; // Make this a client component
+
 import { LoginForm } from "@/components/login-form"
 
 export default function Page() {
