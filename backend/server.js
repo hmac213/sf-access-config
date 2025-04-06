@@ -27,7 +27,6 @@ app.use(
         cookie: {
             secure: process.env.NODE_ENV === 'production' ? true : false, // only set secure cookies in production
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined,
         }
     })
 );
